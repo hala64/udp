@@ -1,0 +1,11 @@
+hydra-core
+pytorch-lightning
+torchvision
+wandb
+jupyterlab
+numpy 
+matplotlib
+torch
+pillow
+scikit-learn
+einops
