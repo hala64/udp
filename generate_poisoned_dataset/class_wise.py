@@ -23,22 +23,23 @@ def class_wise_poison(args,width,labels,trainset):
     return poison_trainset
 
 def region(args, width, labels, trainset, device, patch=4, epsilon=8/255):
-    batch_size = len(trainset) / labels
+    sq_patch = int(np.sqrt(patch))
+    batch_size = int(len(trainset) / labels)
     poison_trainset = list([torch.zeros(3, width, width), 0] for _ in range(len(trainset)))
     torch.manual_seed(args.seed)
     for i in range(int(len(trainset)/batch_size)):
         print(i)
-        data = list(trainset[j][0] for j in range(i*batch_size,(i+1)*batch_size))
+        data = list(trainset[j][0] for j in range(int(i*batch_size),int((i+1)*batch_size)))
         data = torch.stack(data)
         data = data.to(device)
         data = data.permute(2, 3, 0, 1)
         #region_noise = list(torch.zeros(100,3,1,1) for _ in range(patch))
-        for j1 in range(int(np.sqrt(patch))):
-            for j2 in range(int(np.sqrt(patch))):
+        for j1 in range(sq_patch):
+            for j2 in range(sq_patch):
                 region_noise = epsilon * torch.sign(torch.randn(1,1,1,3)).to(device)
-                data[j1*int(32/np.sqrt(patch)):(j1+1)*int(32/np.sqrt(patch)),
-                j2*int(32/np.sqrt(patch)):(j2+1)*int(32/np.sqrt(patch)),:,:] += \
-                    region_noise.repeat(int(32/np.sqrt(patch)),int(32/np.sqrt(patch)),batch_size,1)
+                data[j1*int(width/sq_patch):(j1+1)*int(width/sq_patch),
+                j2*int(width/sq_patch):(j2+1)*int(width/sq_patch),:,:] += \
+                    region_noise.repeat(int(width/sq_patch),int(width/sq_patch),batch_size,1)
 
         data = data.permute(2,3,0,1)
         data = torch.clamp(data,0.,1.)
@@ -78,7 +79,7 @@ def classwise(args, poison):
         torch.save(poison_trainset,os.path.join('./poison_data', f'{poison}_trainset.pth'))
 
     elif poison == 'region4' or 'region16' or 'region64':
-        patch = ''.join(re.findall('[0-9]',poison))
+        patch = int(''.join(re.findall('[0-9]',poison)))
         start_time =time.time()
         if dataset == 'CIFAR-10':
             sorted_trainset = SortedCIFAR10(trainset).data()
@@ -90,7 +91,7 @@ def classwise(args, poison):
         end_time = time.time()
         logger.info(f'generate {poison} in {end_time-start_time} seconds')
 
-        torch.save(poison_trainset,os.path.join('./poison_data', f'{poison}_trainset.pth'))
+        torch.save(poison_trainset,os.path.join(model_dir, f'{poison}_trainset.pth'))
 
 
     logger.info(f'poison data {poison} has been created')
