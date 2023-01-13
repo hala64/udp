@@ -1,6 +1,6 @@
 from .class_wise import classwise
 from .error_min import errmin
-from args import get_args
+from .args import get_args
 
 full_poison = ['random-c','region4','region16','region64','err-max','err-min-s','err-min-c','ntga','ar',
           'robustem','advinduce','hyp']
