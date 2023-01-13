@@ -66,7 +66,7 @@ def errmax(args, source_model_name='ResNet18'):
                                  num_steps=250,step_size=-0.064/255,make_labels=True)
     if not os.path.exists('./poison_data'):
         os.makedirs('./poison_data')
-    torch.save(poison_trainset, os.path.join('./poison_data', f'errmax_poison_trainset_{source_model_name}.pth'))
+    torch.save(poison_trainset, os.path.join(model_dir, f'errmax_poison_trainset_{source_model_name}.pth'))
 
     end_time = time.time()
     #print(end_time-start_time)
