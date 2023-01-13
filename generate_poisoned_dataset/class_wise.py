@@ -76,7 +76,7 @@ def classwise(args, poison):
         poison_trainset = class_wise_poison(args, width, labels, trainset)
         end_time = time.time()
         logger.info(f'generate {poison} in {end_time-start_time} seconds')
-        torch.save(poison_trainset,os.path.join('./poison_data', f'{poison}_trainset.pth'))
+        torch.save(poison_trainset,os.path.join(model_dir, f'{poison}_trainset.pth'))
 
     elif poison == 'region4' or 'region16' or 'region64':
         patch = int(''.join(re.findall('[0-9]',poison)))
