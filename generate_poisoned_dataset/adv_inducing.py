@@ -56,6 +56,6 @@ def adv_induce(args):
     poison_trainset = datapoison(width, labels, source_model, trainset, device,
                                  num_steps=60,step_size=0.5/255,make_labels=True)
 
-    torch.save(poison_trainset,os.path.join('./poison_data', 'adv_inducing_poison_trainset.pth'))
+    torch.save(poison_trainset,os.path.join((model_dir, 'adv_inducing_poison_trainset.pth'))
 
     return poison_trainset
