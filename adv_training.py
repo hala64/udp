@@ -99,7 +99,7 @@ def adv_train(args):
 
     victim_model_name = args.victim_model
     victim_lr = args.lr
-    epsilons = [1 / 255, 2 / 255, 4 / 255, 6 / 255, 8 / 255, 12 / 255, 16 / 255]
+    epsilons = [1 / 255, 2 / 255, 3 / 255, 4 / 255, 6 / 255, 8 / 255, 12 / 255, 16 / 255]
     for iter in range(len(epsilons)):
         epsilon = epsilons[iter]
         logger.info(
