@@ -34,7 +34,7 @@ def get_args():
                         help='perturbation')
     parser.add_argument('--num-steps', default=10,
                         help='perturb step number')
-    parser.add_argument('--step-size', default=2/255,
+    parser.add_argument('--step-size', default=1.6/255,
                         help='perturb step size')
     parser.add_argument('--seed', type=int, default=1111, metavar='S',
                         help='random seed')
