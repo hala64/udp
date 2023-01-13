@@ -1,6 +1,0 @@
-torch==1.12.1
-torchvision==0.13.1
-logging==0.5.1.2
-numpy==1.21.5
-re==2.2.1
-PIL==9.0.1
