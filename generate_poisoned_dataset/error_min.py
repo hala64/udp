@@ -93,6 +93,6 @@ def errmin(args, source_model_name='ResNet18', cl_wise=False):
         poison_trainset = class_wise_poison(args, width, labels, sorted_poison_trainset, sorted_trainset)
     if not os.path.exists('./poison_data'):
         os.makedirs('./poison_data')
-    torch.save(poison_trainset, os.path.join('./poison_data', f'errmin_poisoned_trainset_{source_model_name}.pth'))
+    torch.save(poison_trainset, os.path.join(model_dir, f'errmin_poisoned_trainset_{source_model_name}.pth'))
 
     return poison_trainset
