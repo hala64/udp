@@ -33,7 +33,7 @@ class AdversarialPoison(torch.utils.data.Dataset):
             targets[true_index] = (label)
         return data, targets
 
-def autoregressive():
+def autoregressive(args):
     model_dir = './ar-results'
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
@@ -42,7 +42,7 @@ def autoregressive():
 
     trainset = torchvision.datasets.CIFAR10(root='../data', train=True, download=True, transform=transforms.ToTensor())
 
-    poison_trainset = AdversarialPoison('./poison_data/linf-8-cifar10-ar',trainset)
-    torch.save(poison_trainset, os.path.join('./poison_data', 'autoregression_poison_trainset.pth'))
+    poison_trainset = AdversarialPoison(os.path.join(args.poison_dir, 'linf-8-cifar10-ar', trainset))
+    torch.save(poison_trainset, os.path.join(args.poison_dir, 'autoregression_poison_trainset.pth'))
 
     return poison_trainset
