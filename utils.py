@@ -106,13 +106,13 @@ class SortedCIFAR100(torch.utils.data.Dataset):
         for i in range(len(self.dataset)):
             self.dummy[i] = tuple(self.dummy[i])
 
-    def sample(self, label): #带标签
+    def sample(self, label): #with labels
         self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
                                           (label + 1) * int(len(self.dataset)/self.num_classes)]
         self.sortedset= tuple(self.sortedset)
         return self.sortedset
 
-    def image(self, label): #不带标签
+    def image(self, label): #without labels
         self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
                                           (label + 1) * int(len(self.dataset)/self.num_classes)]
         self.sortedset= tuple(self.sortedset)
@@ -304,7 +304,7 @@ def PGD_attack(model, X, y, device, epsilon=8/255, num_steps=10, step_size=1/255
             x_adv = torch.clamp(x_adv, normal_zero, normal_one)
         else:
             x_adv = torch.min(torch.max(x_adv, X - epsilon), X + epsilon)
-            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp到[0,1]就不能进行normalize了
+            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp to [0,1]
         optimizer.step()
     #torch.cuda.empty_cache()
     return x_adv
@@ -334,7 +334,7 @@ def CW_attack(model, X, y, device, epsilon=8/255, num_steps=10, step_size=1/255,
             x_adv = torch.clamp(x_adv, normal_zero, normal_one)
         else:
             x_adv = torch.min(torch.max(x_adv, X - epsilon), X + epsilon)
-            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp到[0,1]就不能进行normalize了
+            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp to [0,1]
     #torch.cuda.empty_cache()
     return x_adv
 
