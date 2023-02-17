@@ -172,13 +172,13 @@ class SortedTinyImageNet():
         for i in range(len(self.dataset)):
             self.dummy[i] = tuple(self.dummy[i])
 
-    def sample(self, label): #带标签
+    def sample(self, label): #with labels
         self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
                                           (label + 1) * int(len(self.dataset)/self.num_classes)]
         self.sortedset= tuple(self.sortedset)
         return self.sortedset
 
-    def image(self, label): #不带标签
+    def image(self, label): #without labels
         self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
                                           (label + 1) * int(len(self.dataset)/self.num_classes)]
         self.sortedset= tuple(self.sortedset)
