@@ -17,8 +17,12 @@ def main():
 
     # detect poisons
     poisondetect(args)
+    
+    # defend poisons by stronger data augmentations and adversarial noise
+    denoise(args)
+    denoise_aug(args)
 
-    #defend poisons
+    # defend poisons by adversarial training
     adv_train(args)
 
 
