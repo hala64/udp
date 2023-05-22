@@ -187,7 +187,7 @@ def PGD_attack(model, X, y, device, epsilon=8/255, num_steps=10, step_size=1/255
             x_adv = torch.clamp(x_adv, normal_zero, normal_one)
         else:
             x_adv = torch.min(torch.max(x_adv, X - epsilon), X + epsilon)
-            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp to [0,1] without normalize
+            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp to [0,1]
         optimizer.step()
     #torch.cuda.empty_cache()
     return x_adv
@@ -217,7 +217,7 @@ def CW_attack(model, X, y, device, epsilon=8/255, num_steps=10, step_size=1/255,
             x_adv = torch.clamp(x_adv, normal_zero, normal_one)
         else:
             x_adv = torch.min(torch.max(x_adv, X - epsilon), X + epsilon)
-            x_adv = torch.clamp(x_adv, 0.0, 1.0) # clamp to [0,1] without normalize
+            x_adv = torch.clamp(x_adv, 0.0, 1.0) # clamp to [0,1]
     #torch.cuda.empty_cache()
     return x_adv
 
