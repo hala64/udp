@@ -1,3 +1,5 @@
+import argparse
+
 def get_args():
     parser = argparse.ArgumentParser(description='Generate poisoned data')
     parser.add_argument('--dataset', default='CIFAR-10', type=str, help='type of poisoned dataset')
@@ -9,8 +11,7 @@ def get_args():
 
     parser.add_argument('--data-augmentation', type=bool, default=True,
                         help='whether using data augmentation')
-    parser.add_argument('--strong-augmentation', type=bool, default=False,
-                        help='whether using strong data augmentation')
+
     parser.add_argument('--strength', type=float, default=1.0, help='strong augmentation strength')
 
     parser.add_argument('--poison-method', type=str, default='errmin',
@@ -56,6 +57,7 @@ def get_args():
     parser.add_argument('--gpu-id', type=str, default='0')
 
     parser.add_argument('--evaluation', action='store_true', help='evaluate poison power')
+    parser.add_argument('--noise-test', action='store_true', help='test noise learnabilities')
     parser.add_argument('--detection', action='store_true', help='detect poisons')
     parser.add_argument('--adv-training', action='store_true', help='defend poisons by adversarial training')
     parser.add_argument('--strong-aug', action='store_true', help='defend poisons by stronger augmentations')
