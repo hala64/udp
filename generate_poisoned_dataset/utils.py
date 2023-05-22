@@ -105,189 +105,6 @@ class TinyImageNetPoisonIndex(ImageFolder):
         return sample, target, index
 
 
-class SortedCIFAR10(torch.utils.data.Dataset):
-    def __init__(self, dataset, num_classes=10):
-
-        self.dataset = dataset
-
-        self.dummy = list([torch.zeros(3, 32, 32), 0] for _ in range(len(self.dataset)))
-
-        self.num_classes = num_classes
-
-        self.accumulator = np.zeros(self.num_classes)
-
-        self.calculator = np.zeros(self.num_classes)
-
-        for i in range(len(self.dataset)):
-            for j in range(self.num_classes):
-                if self.dataset[i][1] == j:
-                    self.accumulator[j] += 1
-
-        for i in range(len(self.dataset)):
-            # print(list(dummytestset[i]))
-            # dummytestset[i] = list(dummytestset[i])
-            for j in range(self.num_classes):
-                # print(k[j])
-                if self.dataset[i][1] == j:
-                    # print(testset[i][0])
-                    # print(dummytestset[i][0])
-                    # print(dummytestset[i][1])
-                    # print(dummytestset[i][0].size())
-                    #self.dummy[int(self.calculator[j]) + int(len(self.dataset)/self.num_classes) * j][0] = self.dataset[i][0]
-                    #self.dummy[int(self.calculator[j]) + int(len(self.dataset)/self.num_classes) * j][1] = j
-                    self.dummy[int(self.calculator[j]) + int(np.sum(self.accumulator[:j]))][0] = self.dataset[i][0]
-                    self.dummy[int(self.calculator[j]) + int(np.sum(self.accumulator[:j]))][1] = j
-                    self.calculator[j] += 1
-        for i in range(len(self.dataset)):
-            self.dummy[i] = tuple(self.dummy[i])
-
-    def sample(self, label): #with label
-        self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
-                                          (label + 1) * int(len(self.dataset)/self.num_classes)]
-        self.sortedset= tuple(self.sortedset)
-        return self.sortedset
-
-    def image(self, label): #withou label
-        self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
-                                          (label + 1) * int(len(self.dataset)/self.num_classes)]
-        self.sortedset= tuple(self.sortedset)
-        self.image = [self.sortedset[i][0].detach().cpu() for i in range(len(self.sortedset))]
-        return self.image
-
-    def data(self):
-        return self.dummy
-
-    def __getitem__(self,item):
-        return self.dummy[item]
-
-    def __len__(self):
-        return len(self.dummy)
-
-
-class SortedCIFAR100(torch.utils.data.Dataset):
-    def __init__(self, dataset, num_classes=100):
-
-        self.dataset = dataset
-
-        self.dummy = list([torch.zeros(3, 32, 32), 0] for _ in range(len(self.dataset)))
-
-        self.num_classes = num_classes
-
-        self.accumulator = np.zeros(self.num_classes)
-
-        self.calculator = np.zeros(self.num_classes)
-
-        for i in range(len(self.dataset)):
-            for j in range(self.num_classes):
-                if self.dataset[i][1] == j:
-                    self.accumulator[j] += 1
-
-        for i in range(len(self.dataset)):
-            # print(list(dummytestset[i]))
-            # dummytestset[i] = list(dummytestset[i])
-            for j in range(self.num_classes):
-                # print(k[j])
-                if self.dataset[i][1] == j:
-                    # print(testset[i][0])
-                    # print(dummytestset[i][0])
-                    # print(dummytestset[i][1])
-                    # print(dummytestset[i][0].size())
-                    #self.dummy[int(self.calculator[j]) + int(len(self.dataset)/self.num_classes) * j][0] = self.dataset[i][0]
-                    #self.dummy[int(self.calculator[j]) + int(len(self.dataset)/self.num_classes) * j][1] = j
-                    self.dummy[int(self.calculator[j]) + int(np.sum(self.accumulator[:j]))][0] = self.dataset[i][0]
-                    self.dummy[int(self.calculator[j]) + int(np.sum(self.accumulator[:j]))][1] = j
-                    self.calculator[j] += 1
-        for i in range(len(self.dataset)):
-            self.dummy[i] = tuple(self.dummy[i])
-
-    def sample(self, label): #带标签
-        self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
-                                          (label + 1) * int(len(self.dataset)/self.num_classes)]
-        self.sortedset= tuple(self.sortedset)
-        return self.sortedset
-
-    def image(self, label): #不带标签
-        self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
-                                          (label + 1) * int(len(self.dataset)/self.num_classes)]
-        self.sortedset= tuple(self.sortedset)
-        self.image = [self.sortedset[i][0].detach().cpu() for i in range(len(self.sortedset))]
-        return self.image
-
-    def data(self):
-        return self.dummy
-
-    def __getitem__(self,item):
-        return self.dummy[item]
-
-    def __len__(self):
-        return len(self.dummy)
-
-class SortedTinyImageNet():
-    def __init__(self, dataset, num_classes=200):
-
-        self.dataset = dataset
-
-        self.dummy = list([torch.zeros(3, 64, 64), 0] for _ in range(len(self.dataset)))
-
-        self.num_classes = num_classes
-
-        self.accumulator = np.zeros(self.num_classes)
-
-        self.calculator = np.zeros(self.num_classes)
-        for j in range(200):
-            self.accumulator[j] = 500
-        '''
-        for i in range(len(self.dataset)):
-            if i % 100 == 0:
-                print(i)
-            for j in range(self.num_classes):
-                if self.dataset[i][1] == j:
-                    self.accumulator[j] += 1
-        '''
-
-
-        for i in range(len(self.dataset)):
-            if i % 100 == 0:
-                print(i)
-            # print(list(dummytestset[i]))
-            # dummytestset[i] = list(dummytestset[i])
-            for j in range(self.num_classes):
-                # print(k[j])
-                if self.dataset[i][1] == j:
-                    # print(testset[i][0])
-                    # print(dummytestset[i][0])
-                    # print(dummytestset[i][1])
-                    # print(dummytestset[i][0].size())
-                    #self.dummy[int(self.calculator[j]) + int(len(self.dataset)/self.num_classes) * j][0] = self.dataset[i][0]
-                    #self.dummy[int(self.calculator[j]) + int(len(self.dataset)/self.num_classes) * j][1] = j
-                    self.dummy[int(self.calculator[j]) + int(np.sum(self.accumulator[:j]))][0] = self.dataset[i][0]
-                    self.dummy[int(self.calculator[j]) + int(np.sum(self.accumulator[:j]))][1] = j
-                    self.calculator[j] += 1
-        for i in range(len(self.dataset)):
-            self.dummy[i] = tuple(self.dummy[i])
-
-    def sample(self, label): #带标签
-        self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
-                                          (label + 1) * int(len(self.dataset)/self.num_classes)]
-        self.sortedset= tuple(self.sortedset)
-        return self.sortedset
-
-    def image(self, label): #不带标签
-        self.sortedset = self.dummy[label * int(len(self.dataset)/self.num_classes):
-                                          (label + 1) * int(len(self.dataset)/self.num_classes)]
-        self.sortedset= tuple(self.sortedset)
-        self.image = [self.sortedset[i][0].detach().cpu() for i in range(len(self.sortedset))]
-        return self.image
-
-    def data(self):
-        return self.dummy
-
-    def __getitem__(self,item):
-        return self.dummy[item]
-
-    def __len__(self):
-        return len(self.dummy)
-
 def Normalize(x, mean, std, device):
     x = x.to(device)
     for i in range(len(x)):
@@ -295,34 +112,6 @@ def Normalize(x, mean, std, device):
             s, m = torch.tensor(std[j]).to(device), torch.tensor(mean[j]).to(device)
             x[i][j] = (x[i][j] - m) / s
     return x
-
-def datapoison(width,labels, model, trainset, device, num_steps=20, step_size=-1/255,
-               epsilon=8/255, batch_size=100, make_labels=False):
-    poison_trainset = list([torch.zeros(3, width, width), 0] for _ in range(len(trainset)))
-    model.eval()
-    for i in range(int(len(trainset)/batch_size)):
-        print(i)
-        data = list(trainset[j][0] for j in range(i*batch_size,(i+1)*batch_size))
-        if make_labels:
-            target = list(torch.tensor((trainset[j][1] + 3) % labels) for j in range(i * batch_size, (i + 1) * batch_size))
-        else:
-            target = list(torch.tensor(trainset[j][1]) for j in range(i * batch_size, (i + 1) * batch_size))
-
-        data = torch.stack(data)
-        target = torch.stack(target)
-        data, target = data.to(device), target.to(device)
-
-        poison_data = PGD_attack(model, data, target, device, epsilon=epsilon,
-                   num_steps=num_steps, step_size=step_size)
-        poison_data = poison_data.detach().cpu()
-
-        for k in range(len(poison_data)):
-            poison_trainset[i * batch_size + k][0] = poison_data[k]
-
-    for l in range(len(trainset)):
-        poison_trainset[l][1] = trainset[l][1]
-
-    return poison_trainset
 
 
 def mixup_data(data, target, device, alpha=1.0):
@@ -398,7 +187,7 @@ def PGD_attack(model, X, y, device, epsilon=8/255, num_steps=10, step_size=1/255
             x_adv = torch.clamp(x_adv, normal_zero, normal_one)
         else:
             x_adv = torch.min(torch.max(x_adv, X - epsilon), X + epsilon)
-            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp到[0,1]就不能进行normalize了
+            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp to [0,1] without normalize
         optimizer.step()
     #torch.cuda.empty_cache()
     return x_adv
@@ -428,7 +217,7 @@ def CW_attack(model, X, y, device, epsilon=8/255, num_steps=10, step_size=1/255,
             x_adv = torch.clamp(x_adv, normal_zero, normal_one)
         else:
             x_adv = torch.min(torch.max(x_adv, X - epsilon), X + epsilon)
-            x_adv = torch.clamp(x_adv, 0.0, 1.0)  # clamp到[0,1]就不能进行normalize了
+            x_adv = torch.clamp(x_adv, 0.0, 1.0) # clamp to [0,1] without normalize
     #torch.cuda.empty_cache()
     return x_adv
 
@@ -686,30 +475,3 @@ def poison_aug(args, poison_set):
         raise {'dataset error'}
 
     return poison_set
-
-class AdversarialPoison(torch.utils.data.Dataset):
-    def __init__(self, root, baseset):
-        self.baseset = baseset
-        self.transform = self.baseset.transform
-        self.samples = os.listdir(os.path.join(root, 'data'))
-        self.root = root
-
-        # Load images into memory to prevent IO from disk
-        self.data, self.targets = self._load_images()
-
-    def __len__(self):
-        return len(self.baseset)
-
-    def __getitem__(self, idx):
-        return self.transform(self.data[idx]), self.targets[idx]
-
-    def _load_images(self):
-        data = list(torch.zeros(3,32,32) for _ in range(len(self.baseset)))
-        targets = list(0 for _ in range(len(self.baseset)))
-        num_data_to_load = len(self.baseset)
-        for i in range(num_data_to_load):
-            true_index = int(self.samples[i].split('.')[0])
-            _, label = self.baseset[true_index]
-            data[true_index]= (Image.open(os.path.join(self.root, 'data', self.samples[i])).copy())
-            targets[true_index] = (label)
-        return data, targets
