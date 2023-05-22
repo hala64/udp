@@ -24,8 +24,7 @@ def evaluate(args):
     poison_method = args.poison_method
     if not os.path.exists(dir):
         os.makedirs(dir)
-    #os.environ["CUDA_VISIBLE_DEVICES"] = '4'
-    #os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
+
     device = torch.device("cuda" if not args.no_cuda else "cpu")
     kwargs = {'num_workers': 4, 'pin_memory': True} if not args.no_cuda else {}
     batch_size = args.batch_size
@@ -65,7 +64,7 @@ def evaluate(args):
 
     poison_train_loader = torch.utils.data.DataLoader(poison_data, batch_size=batch_size, shuffle=True, **kwargs)
 
-    width, labels, _, testset = data_utils(args.dataset,aug=args.data_augmentation)
+    width, labels, _, testset = data_utils(args)
     test_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=True, **kwargs)
 
     victim_model_name = args.victim_model
@@ -118,3 +117,4 @@ def evaluate(args):
             logger.info('%d \t %.1f \t \t %.1f \t %.4f \t %.4f \t %.4f \t %.4f ',
                         epoch + 1, train_time - start_time, test_time - train_time,
                         train_loss, train_accuracy,test_loss, test_accuracy)
+
