@@ -87,19 +87,30 @@ def adv_train(args):
         handlers=[logging.FileHandler(os.path.join(dir, f'{at_method}-{poison_method}.log')),logging.StreamHandler()])
 
 
-    poison_trainset = generate_poison(args, poison_method)
+    poison = generate_poison(args, poison_method)
     if args.data_augmentation:
-        poison_trainset = poison_aug(args, poison_trainset)
+        transform = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+    else:
+        transform = transforms.ToTensor()
+        
+    if args.dataset == 'CIFAR-10':
+        poison_data = CIFAR10PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
+    elif args.dataset == 'CIFAR-100':
+        poison_data = CIFAR100PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
 
-    poison_train_loader = torch.utils.data.DataLoader(poison_trainset, batch_size=batch_size, shuffle=True,
-                                                      **kwargs)
-
-    _, labels, _, testset = data_utils(args.dataset,aug=args.data_augmentation)
+    poison_train_loader = torch.utils.data.DataLoader(poison_data, batch_size=batch_size, shuffle=True, **kwargs)
+    
+    _, labels, _, testset = data_utils(args)
     test_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=True, **kwargs)
 
     victim_model_name = args.victim_model
     victim_lr = args.lr
     epsilons = [1 / 255, 2 / 255, 3 / 255, 4 / 255, 6 / 255, 8 / 255, 12 / 255, 16 / 255]
+          
     for iter in range(len(epsilons)):
         epsilon = epsilons[iter]
         logger.info(
