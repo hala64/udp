@@ -1,6 +1,6 @@
 # Detection and Defense of Unlearnable Examples
 
-# Install requirements
+Install requirements
 ```shell
 pip install -r requirements.txt
 ```
