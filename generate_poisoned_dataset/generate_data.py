@@ -3,7 +3,7 @@ import torch
 import os
 
 full_poison = ['random-c','region4','region16','region64', 'err-min-s', 'err-min-c', 'ntga', 'ar',
-          'robustem',' hyp', 'entf']
+          'robustem',' hyp', 'entf', 'clean']
 
 
 def generate_poison(args, poison):
@@ -30,5 +30,12 @@ def generate_poison(args, poison):
     elif poison == 'entf':
         # generated from https://github.com/WenRuiUSTC/EntF
         poisons = torch.load(os.path.join('poisoned_data', 'entf_poisons.pt'))
+    elif poison == 'clean':
+        if args.dataset == 'CIFAR-10' or 'CIFAR-100':
+           poisons = torch.zeros(50000, 3, 32, 32)
+        elif args.dataset == 'TinyImageNet':
+           poisons = torch.zeros(100000, 3, 64, 64)
+    else:
+        raise {'poison method error'}
 
     return poisons
