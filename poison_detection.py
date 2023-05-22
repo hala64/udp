@@ -44,7 +44,32 @@ def poisondetect(args):
         f'victim model is {victim_model_name}, learning rate={victim_lr}')
 
 
-    poison_data = generate_poison(args, poison_method)
+    poison = generate_poison(args, poison_method)
+    if args.data_augmentation and args.dataset != 'TinyImageNet':
+        transform = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+
+    elif args.data_augmentation and args.dataset == 'TinyImageNet':
+        transform = transforms.Compose([
+            transforms.RandomResizedCrop(64),
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.2),
+            Cutout(),
+            transforms.ToTensor(),
+        ])
+    else:
+        transform = transforms.ToTensor()
+
+    if args.dataset == 'CIFAR-10':
+        poison_data = CIFAR10PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
+    elif args.dataset == 'CIFAR-100':
+        poison_data = CIFAR100PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
+    elif args.dataset == 'TinyImageNet':
+        poison_data = TinyImageNetPoisonIndex(root=args.data, train=True, transform=transform, delta=poison)
+   
     width, _, _, _ = data_utils(args.dataset)
 
     torch.manual_seed(args.seed)
@@ -54,9 +79,6 @@ def poisondetect(args):
         train_set, val_set = dataset.random_split(poison_data, (90000, 10000))
     else:
         raise {'dataset error'}
-
-    if args.data_augmentation:
-        train_set = poison_aug(args, train_set)
 
     val_loader = torch.utils.data.DataLoader(val_set, batch_size=batch_size, shuffle=True,**kwargs)
 
