@@ -253,7 +253,7 @@ def CW_attack(model, X, y, device, epsilon=8/255, num_steps=10, step_size=1/255,
 def train(model, device, train_loader, optimizer, epoch, epsilon=8/255, num_steps=10, step_size=-1/255, attack='None',
           normal=False, make_labels=False, mixup=False, quantize=False, masked=False, random=False):
     criterion = nn.CrossEntropyLoss()
-    for batch_idx, (data, target) in enumerate(train_loader):
+    for batch_idx, (data, target, _) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         if make_labels:
             target = (target + 1) % 10
@@ -301,7 +301,7 @@ def train(model, device, train_loader, optimizer, epoch, epsilon=8/255, num_step
                     epoch+1, batch_idx * len(data), len(train_loader.dataset),
                            100. * batch_idx / len(train_loader), loss.item()))
         else:
-            if batch_idx % 1000 == 0:
+            if batch_idx % 100 == 0:
                 print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                     epoch+1, batch_idx * len(data), len(train_loader.dataset),
                            100. * batch_idx / len(train_loader), loss.item()))
@@ -313,7 +313,7 @@ def eval_train(model, device, train_loader,attack_method='None',normal=False):
     train_loss = 0
     correct = 0
     with torch.no_grad():
-        for data, target in train_loader:
+        for data, target, _ in train_loader:
             data, target = data.to(device), target.to(device)
             if attack_method == 'PGD':
                 data = PGD_attack(model, data, target, device, epsilon=8 / 255, num_steps=20, step_size=1 / 255,
@@ -335,7 +335,7 @@ def eval_test(model, device, test_loader,attack_method='None',normal=False):
     test_loss = 0
     correct = 0
     with torch.no_grad():
-        for data, target in test_loader:
+        for data, target, _ in test_loader:
             data, target = data.to(device), target.to(device)
             if attack_method == 'PGD':
                 data = PGD_attack(model, data, target, device, epsilon=8 / 255, num_steps=20, step_size=1 / 255,
@@ -531,3 +531,4 @@ class AdversarialPoison(torch.utils.data.Dataset):
             data[true_index]= (Image.open(os.path.join(self.root, 'data', self.samples[i])).copy())
             targets[true_index] = (label)
         return data, targets
+
