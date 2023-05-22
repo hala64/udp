@@ -12,9 +12,6 @@ def main():
     #evaluate the poison power with different learning rates and victim models
     evaluate(args)
 
-    # test different types of noise learning
-    poisontest(args)
-
     # detect poisons
     poisondetect(args)
     
