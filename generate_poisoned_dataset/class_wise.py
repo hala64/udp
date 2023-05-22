@@ -54,7 +54,7 @@ def classwise(args, poison):
         handlers=[logging.FileHandler(os.path.join(model_dir, 'vit-random.log')),logging.StreamHandler()])
 
 
-    width, labels, trainset, _ = data_utils(dataset)
+    width, labels, trainset, _ = data_utils(args)
     poisons = torch.zeros(len(trainset), 3, width, width)
 
     if poison == 'randomc':
