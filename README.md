@@ -1,6 +1,6 @@
 # Detection and Defense of Unlearnable Examples
 
-Install requirements
+# Install requirements
 ```shell
 pip install -r requirements.txt
 ```
@@ -17,19 +17,19 @@ Detection by simple networks
 python main.py --detection --detection-method simple-2NN --poison-method region16 --dataset CIFAR-10
 ```
 
-# Detection by bias-shifting noises
+Detection by bias-shifting noises
 
 ```bash
 python main.py --detection --detection-method bias-0.5 --poison-method region16 --dataset CIFAR-10
 ```
 
-# Defense by stronger data augmentations with adversarial noises
+Defense by stronger data augmentations with adversarial noises
 
 ```bash
 python main.py --strong-aug --strength 1.0 --poison-method region16 --dataset CIFAR-10
 ```
 
-# Evaluation of criteria under adversarial training
+Evaluation of criteria under adversarial training
 
 ```bash
 python main.py --adv-training --poison-method region16 --dataset CIFAR-10
