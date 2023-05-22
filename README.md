@@ -37,8 +37,14 @@ https://github.com/HanxunH/Unlearnable-Examples
 Robust Unlearnable Examples:
 https://github.com/fshp971/robust-unlearnable-examples
 
-NTGA:
+NTGA Poisons:
 https://github.com/lionelmessi6410/ntga
 
-AutoRegressive:
+AutoRegressive Poisons:
 https://github.com/psandovalsegura/autoregressive-poisoning
+
+Hypocritical Poisons:
+https://github.com/TLMichael/Hypocritical-Perturbation
+
+EntF Poisons:
+https://github.com/WenRuiUSTC/EntF
