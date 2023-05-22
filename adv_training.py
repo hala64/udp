@@ -17,7 +17,7 @@ from generate_poisoned_dataset.generate_data import generate_poison
 def train(model, device, train_loader, optimizer,  epoch, awp_adversary,
           epsilon=8/255, num_steps=10, step_size=-1/255, attack='None', normal=False, make_labels=False, random=False):
     criterion = nn.CrossEntropyLoss()
-    for batch_idx, (data, target) in enumerate(train_loader):
+    for batch_idx, (data, target, _) in enumerate(train_loader):
         data, target = data.to(device), target.to(device)
         if make_labels:
             for i in range(len(target)):
