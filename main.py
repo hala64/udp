@@ -4,24 +4,32 @@ from noise_test import poisontest
 from evaluate_poison import evaluate
 from poison_detection import poisondetect
 from adv_training import adv_train
+from sdaan import denoise, denoise_aug
 
 def main():
-    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
     args = get_args()
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 
-    #evaluate the poison power with different learning rates and victim models
-    evaluate(args)
+    if args.evaluation:
+        # evaluate the poison power with different learning rates and victim models
+        evaluate(args)
 
-    # detect poisons
-    poisondetect(args)
-    
-    # defend poisons by stronger data augmentations and adversarial noise
-    denoise(args)
-    denoise_aug(args)
+    if args.noise_test:
+        # test different types of noise learning
+        poisontest(args)
 
-    # defend poisons by adversarial training
-    adv_train(args)
+    if args.detection:
+        # detect poisons
+        poisondetect(args)
 
+    if args.strong_aug:
+        # defend poisons by stronger data augmentations and adversarial noise
+        denoise(args)
+        denoise_aug(args)
+
+    if args.adv_training:
+        # defend poisons by adv training
+        adv_train(args)
 
 if __name__ == '__main__':
     main()
