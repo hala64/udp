@@ -45,6 +45,10 @@ def poisondetect(args):
 
 
     poison = generate_poison(args, poison_method)
+
+    if args.detection_method != 'simple-2NN':
+        args.data_augmentation = False
+
     if args.data_augmentation and args.dataset != 'TinyImageNet':
         transform = transforms.Compose([
             transforms.RandomCrop(32, padding=4),
@@ -70,7 +74,7 @@ def poisondetect(args):
     elif args.dataset == 'TinyImageNet':
         poison_data = TinyImageNetPoisonIndex(root=args.data, train=True, transform=transform, delta=poison)
    
-    width, _, _, _ = data_utils(args.dataset)
+    width, _, _, _ = data_utils(args)
 
     torch.manual_seed(args.seed)
     if args.dataset == 'CIFAR-10' or 'CIFAR-100':
@@ -82,10 +86,11 @@ def poisondetect(args):
 
     val_loader = torch.utils.data.DataLoader(val_set, batch_size=batch_size, shuffle=True,**kwargs)
 
+
     if args.detection_method == 'bias-0.5':
-        train_set = list([train_set[i][0] - 0.5 * torch.ones(1), train_set[i][1]] for i in range(len(train_set)))
+        train_set = list([train_set[i][0] - 0.5 * torch.ones(1), train_set[i][1], train_set[i][2]] for i in range(len(train_set)))
     elif args.detection_method == 'bias+0.5':
-        train_set = list([train_set[i][0] + 0.5 * torch.ones(1), train_set[i][1]] for i in range(len(train_set)))
+        train_set = list([train_set[i][0] + 0.5 * torch.ones(1), train_set[i][1], train_set[i][2]] for i in range(len(train_set)))
 
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True,**kwargs)
 
@@ -128,3 +133,4 @@ def poisondetect(args):
         logger.info('%d \t %.1f \t \t %.1f \t %.4f \t %.4f \t %.4f \t %.4f',
                     epoch+1, train_time - start_time, test_time - train_time,
                     train_loss, train_accuracy, val_loss, val_accuracy)
+
