@@ -43,6 +43,9 @@ def autoregressive(args):
     trainset = torchvision.datasets.CIFAR10(root='../data', train=True, download=True, transform=transforms.ToTensor())
 
     poison_trainset = AdversarialPoison(os.path.join(args.poison_dir, 'linf-8-cifar10-ar', trainset))
-    torch.save(poison_trainset, os.path.join(args.poison_dir, 'autoregression_poison_trainset.pth'))
-
-    return poison_trainset
+    poisons = torch.zeros(len(poison_trainset), 3, 32, 32)
+    
+    for i in range(len(poisons)):
+        poisons[i] = poison_trainset[i][0].cpu()
+               
+    return poisons
