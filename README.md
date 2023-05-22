@@ -1,17 +1,17 @@
 # Detection and Defense of Unlearnable Examples
 
-# Install requirements
+Install requirements
 ```shell
 pip install -r requirements.txt
 ```
 
-# Evaluate the poison power
+Evaluate the poison power
 
 ```bash
 python main.py --evaluation --poison-method region16 --dataset CIFAR-10
 ```
 
-# Detection by simple networks
+Detection by simple networks
 
 ```bash
 python main.py --detection --detection-method simple-2NN --poison-method region16 --dataset CIFAR-10
