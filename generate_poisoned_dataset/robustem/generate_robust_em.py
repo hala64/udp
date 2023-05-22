@@ -249,19 +249,18 @@ def robust_em(targs):
         logger.exception('Unexpected exception! %s', e)
     if targs.dataset == 'CIFAR-10':
         trainset = torchvision.datasets.CIFAR10(root='../data', train=True, download=True, transform=transforms.ToTensor())
-        poison_trainset = list([torch.zeros(3, 32, 32), 0] for _ in range(len(poison_data)))
+        poisons = torch.zeros(len(trainset), 3, 32, 32)
     elif targs.dataset == 'CIFAR-100':
         trainset = torchvision.datasets.CIFAR100(root='../data', train=True, download=True, transform=transforms.ToTensor())
-        poison_trainset = list([torch.zeros(3, 32, 32), 0] for _ in range(len(poison_data)))
+        poisons = torch.zeros(len(trainset), 3, 32, 32)
     elif targs.dataset == 'TinyImageNet':
         from ..TinyImageNet_load import TinyImageNet_load
         trainset = TinyImageNet_load(root='../data/tiny-imagenet-200/', train=True, transform=transforms.ToTensor())
-        poison_trainset = list([torch.zeros(3, 64, 64), 0] for _ in range(len(poison_data)))
+        poisons = torch.zeros(len(trainset), 3, 64, 64)
     else:
         raise {'dataset error'}
 
-    for i in range(len(poison_data)):
-        poison_trainset[i][0] = poison_data[i][0] + 1/255 * poison_noise[i]
-        poison_trainset[i][1] = poison_data[i][1]
+    for i in range(len(poisons)):
+        poisons[i] = 1/255 * poison_noise[i]
 
-    return poison_trainset
+    return poisons
