@@ -37,12 +37,33 @@ def evaluate(args):
         handlers=[logging.FileHandler(os.path.join(dir, f'evaluate-{poison_method}.log')),logging.StreamHandler()])
 
 
-    poison_trainset = generate_poison(args, poison_method)
-    if args.data_augmentation:
-        poison_trainset = poison_aug(args, poison_trainset)
+    poison = generate_poison(args, poison_method)
+    if args.data_augmentation and args.dataset != 'TinyImageNet':
+        transform = transforms.Compose([
+            transforms.RandomCrop(32, padding=4),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
+        
+    elif args.data_augmentation and args.dataset == 'TinyImageNet':
+        transform = transforms.Compose([
+            transforms.RandomResizedCrop(64),
+            transforms.RandomHorizontalFlip(),
+            transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.2),
+            Cutout(),
+            transforms.ToTensor(),
+        ])
+    else:
+        transform = transforms.ToTensor()
 
-    poison_train_loader = torch.utils.data.DataLoader(poison_trainset, batch_size=batch_size, shuffle=True,
-                                                      **kwargs)
+    if args.dataset == 'CIFAR-10':
+        poison_data = CIFAR10PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
+    elif args.dataset == 'CIFAR-100':
+        poison_data = CIFAR100PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
+    elif args.dataset == 'TinyImageNet':
+        poison_data = TinyImageNetPoisonIndex(root=args.data, train=True, transform=transform, delta=poison)
+
+    poison_train_loader = torch.utils.data.DataLoader(poison_data, batch_size=batch_size, shuffle=True, **kwargs)
 
     width, labels, _, testset = data_utils(args.dataset,aug=args.data_augmentation)
     test_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=True, **kwargs)
