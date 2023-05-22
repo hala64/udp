@@ -41,7 +41,7 @@ def adv_induce(args):
     for epoch in range(start_epoch, poison_epoch):
         start_time = time.time()
         adjust_learning_rate(source_optimizer, epoch, poison_epoch, schedule='piecewise')
-        # AT训练source model
+        # AT train source model
         train(source_model, device, train_loader, source_optimizer, epoch,
               epsilon=args.epsilon, num_steps=args.num_steps, step_size=args.step_size,attack='PGD',make_labels=True)
         train_time = time.time()
