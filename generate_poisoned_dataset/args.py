@@ -56,7 +56,6 @@ def get_args():
     parser.add_argument('--gpu-id', type=str, default='0')
 
     parser.add_argument('--evaluation', action='store_true', help='evaluate poison power')
-    parser.add_argument('--noise-test', action='store_true', help='test noise learnabilities')
     parser.add_argument('--detection', action='store_true', help='detect poisons')
     parser.add_argument('--adv-training', action='store_true', help='defend poisons by adversarial training')
     parser.add_argument('--strong-aug', action='store_true', help='defend poisons by stronger augmentations')
