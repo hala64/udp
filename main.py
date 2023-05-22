@@ -1,6 +1,5 @@
 import os
 from generate_poisoned_dataset.args import get_args
-from noise_test import poisontest
 from evaluate_poison import evaluate
 from poison_detection import poisondetect
 from adv_training import adv_train
