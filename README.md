@@ -1,4 +1,4 @@
-# Detection of Unlearnable Examples
+# Detection and Defense of Unlearnable Examples
 
 # Install requirements
 ```shell
@@ -29,3 +29,16 @@ python main.py \
     --step-size 2/255 \
     --adv-dir ./unlearnable_defense \
 ```
+
+# Acknowledgment
+Unlearnable Examples:
+https://github.com/HanxunH/Unlearnable-Examples
+
+Robust Unlearnable Examples:
+https://github.com/fshp971/robust-unlearnable-examples
+
+NTGA:
+https://github.com/lionelmessi6410/ntga
+
+AutoRegressive:
+https://github.com/psandovalsegura/autoregressive-poisoning
