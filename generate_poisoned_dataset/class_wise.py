@@ -4,7 +4,6 @@ import torchvision
 import logging
 import time
 import numpy as np
-import re
 from torchvision import transforms
 
 from utils import *
@@ -69,7 +68,12 @@ def classwise(args, poison):
         logger.info(f'generate {poison} in {end_time-start_time} seconds')
 
     elif poison == 'region4' or 'region16' or 'region64':
-        patch = int(''.join(re.findall('[0-9]',poison)))
+        if poison == 'region4':
+            patch = 4
+        if poison == 'region16':
+            patch = 16
+        if poison == 'region64':
+            patch = 64
         start_time = time.time()
 
         trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True,**kwargs)
