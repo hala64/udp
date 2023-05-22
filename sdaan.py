@@ -51,7 +51,7 @@ def denoise(args):
         start_time = time.time()
 
         train(victim_model, device, train_loader, victim_optimizer, epoch, attack='PGD', step_size=2/255,
-              num_steps=10, multi_steps=args.multi_steps)
+              num_steps=10)
         train_time = time.time()
 
         if (epoch+1) % 10 == 0:
@@ -169,3 +169,4 @@ def denoise_aug(args):
         logger.info('%d \t %.1f \t \t %.1f \t %.4f \t %.4f \t %.4f \t %.4f',
                     epoch+1, train_time - start_time, test_time - train_time,
                     train_loss, train_accuracy, test_loss, test_accuracy)
+
