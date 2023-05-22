@@ -8,7 +8,7 @@ import os
 
 from PIL import Image
 from torchvision import transforms
-from .TinyImageNet_load import TinyImageNet_load
+from generate_poisoned_dataset.TinyImageNet_load import TinyImageNet_load
 from torchtoolbox.transform import Cutout
 from torchvision.datasets import CIFAR10, CIFAR100, ImageFolder
 
