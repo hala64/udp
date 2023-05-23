@@ -99,34 +99,6 @@ def Normalize(x, mean, std, device):
             x[i][j] = (x[i][j] - m) / s
     return x
 
-def datapoison(width,labels, model, trainset, device, num_steps=20, step_size=-1/255,
-               epsilon=8/255, batch_size=100, make_labels=False):
-    poison_trainset = list([torch.zeros(3, width, width), 0] for _ in range(len(trainset)))
-    model.eval()
-    for i in range(int(len(trainset)/batch_size)):
-        print(i)
-        data = list(trainset[j][0] for j in range(i*batch_size,(i+1)*batch_size))
-        if make_labels:
-            target = list(torch.tensor((trainset[j][1] + 3) % labels) for j in range(i * batch_size, (i + 1) * batch_size))
-        else:
-            target = list(torch.tensor(trainset[j][1]) for j in range(i * batch_size, (i + 1) * batch_size))
-
-        data = torch.stack(data)
-        target = torch.stack(target)
-        data, target = data.to(device), target.to(device)
-
-        poison_data = PGD_attack(model, data, target, device, epsilon=epsilon,
-                   num_steps=num_steps, step_size=step_size)
-        poison_data = poison_data.detach().cpu()
-
-        for k in range(len(poison_data)):
-            poison_trainset[i * batch_size + k][0] = poison_data[k]
-
-    for l in range(len(trainset)):
-        poison_trainset[l][1] = trainset[l][1]
-
-    return poison_trainset
-
 
 def mixup_data(data, target, device, alpha=1.0):
     if alpha > 0:
