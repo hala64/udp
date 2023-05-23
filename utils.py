@@ -335,32 +335,6 @@ def adjust_learning_rate(optimizer, epoch,total_epoch,lr=0.1,schedule='cosine'):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
-def make_labels(model, trainset, device, batch_size=100):
-    #nextcycle for label，to generate poison data
-    dummy_trainloader = list([torch.zeros(batch_size,3, 32, 32), torch.zeros(batch_size)] for _ in range(int(len(trainset)/batch_size)))
-    dummy_trainset = list([torch.zeros(3, 32, 32), 0] for _ in range(len(trainset)))
-    model.eval()
-    for i in range(int(len(trainset)/batch_size)):
-        #print(i)
-        dummy_target = list(torch.tensor((trainset[j][1] + 1) % 10) for j in range(i*batch_size,(i+1)*batch_size))
-        #print(target)
-        dummy_target = torch.stack(dummy_target)
-        #target = target.unsqueeze(0)
-        dummy_target = dummy_target.to(device)
-
-        dummy_target = dummy_target.detach().cpu()
-        #print(target)
-        dummy_trainloader[i][1] = dummy_target
-    #print(poison_trainset[11])
-
-    for k in range(len(trainset)):
-        #print(poison_trainset[k])
-        dummy_trainset[k][0] = trainset[k][0]
-        dummy_trainset[k][1] = dummy_trainloader[int(k / batch_size)][1][k % batch_size].item()
-        #print(poison_trainset[k])
-
-    return dummy_trainset
-
 def data_utils(args):
     if args.dataset == 'CIFAR-10':
         width = 32
