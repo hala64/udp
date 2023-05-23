@@ -14,21 +14,14 @@ from torchvision.datasets import CIFAR10, CIFAR100, ImageFolder
 
 
 class CIFAR10PoisonIndex(CIFAR10):
-    def __init__(self, delta: torch.FloatTensor = None, pseudo_labels=None, ratio=1.0,
-                 class_wise_pseduo_labels=None, **kwargs):
+    def __init__(self, delta: torch.FloatTensor = None, ratio=1.0, **kwargs):
         super(CIFAR10PoisonIndex, self).__init__(**kwargs)
         self.delta = delta
-        if pseudo_labels is not None:
-            self.targets = pseudo_labels.astype(np.compat.long)
         assert ratio <= 1.0 and ratio > 0
 
         if self.delta is not None:
             if len(delta) == 10:
-                if class_wise_pseduo_labels is not None:
-                    class_wise_pseduo_targets = class_wise_pseduo_labels.astype(np.compat.long)
-                    self.delta = self.delta[torch.tensor(class_wise_pseduo_targets)]
-                else:
-                    self.delta = self.delta[torch.tensor(self.targets)]
+                self.delta = self.delta[torch.tensor(self.targets)]
             if delta.shape != self.data.shape:
                 self.delta = self.delta.permute(0, 2, 3, 1)
                 assert self.delta.shape == self.data.shape
@@ -47,21 +40,14 @@ class CIFAR10PoisonIndex(CIFAR10):
 
 
 class CIFAR100PoisonIndex(CIFAR100):
-    def __init__(self, delta: torch.FloatTensor = None, pseudo_labels=None, ratio=1.0,
-                 class_wise_pseduo_labels=None, **kwargs):
+    def __init__(self, delta: torch.FloatTensor = None, ratio=1.0, **kwargs):
         super(CIFAR100PoisonIndex, self).__init__(**kwargs)
         self.delta = delta
-        if pseudo_labels is not None:
-            self.targets = pseudo_labels.astype(np.compat.long)
         assert ratio <= 1.0 and ratio > 0
 
         if self.delta is not None:
             if len(delta) == 100:
-                if class_wise_pseduo_labels is not None:
-                    class_wise_pseduo_targets = class_wise_pseduo_labels.astype(np.compat.long)
-                    self.delta = self.delta[torch.tensor(class_wise_pseduo_targets)]
-                else:
-                    self.delta = self.delta[torch.tensor(self.targets)]
+                self.delta = self.delta[torch.tensor(self.targets)]
             if delta.shape != self.data.shape:
                 self.delta = self.delta.permute(0, 2, 3, 1)
                 assert self.delta.shape == self.data.shape
@@ -103,7 +89,6 @@ class TinyImageNetPoisonIndex(ImageFolder):
 
         sample = self.transform(sample)
         return sample, target, index
-
 
 
 def Normalize(x, mean, std, device):
