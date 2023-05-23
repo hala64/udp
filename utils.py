@@ -417,50 +417,6 @@ def data_utils(args):
 
     return width, labels, trainset, testset
 
-def poison_aug(args, poison_set):
-    if args.dataset == 'CIFAR-10':
-        transform = transforms.Compose([
-            transforms.RandomCrop(32, padding=4),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-        ])
-        clean_set = torchvision.datasets.CIFAR10(root=args.data, train=True, download=True, transform=transforms.ToTensor())
-        poison = torch.zeros(len(poison_set), 3, 32, 32)
-        assert len(clean_set) == len(poison)
-        for i in range(len(poison)):
-            poison[i] = poison_set[i][0] - clean_set[i][0]
-        poison_set = CIFAR10PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
-    if args.dataset == 'CIFAR-100':
-        transform = transforms.Compose([
-            transforms.RandomCrop(32, padding=4),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-        ])
-        clean_set = torchvision.datasets.CIFAR100(root=args.data, train=True, download=True, transform=transforms.ToTensor())
-        poison = torch.zeros(len(poison_set), 3, 32, 32)
-        assert len(clean_set) == len(poison)
-        for i in range(len(poison)):
-            poison[i] = poison_set[i][0] - clean_set[i][0]
-        poison_set = CIFAR100PoisonIndex(root=args.data, train=True, download=True, transform=transform, delta=poison)
-    elif args.dataset == 'TinyImageNet':
-        transform = transforms.Compose([
-            transforms.RandomResizedCrop(64),
-            transforms.RandomHorizontalFlip(),
-            transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.2),
-            Cutout(),
-            transforms.ToTensor(),
-        ])
-        clean_set = TinyImageNet_load(root='../data/tiny-imagenet-200/', train=True,
-                                     transform=transforms.ToTensor())
-        poison = torch.zeros(len(poison_set), 3, 64, 64)
-        assert len(clean_set) == len(poison)
-        for i in range(len(poison)):
-            poison[i] = poison_set[i][0] - clean_set[i][0]
-        poison_set = TinyImageNetPoisonIndex(root='../data/tiny-imagenet-200/', train=True, transform=transform, delta=poison)
-    else:
-        raise {'dataset error'}
-
-    return poison_set
 
 class AdversarialPoison(torch.utils.data.Dataset):
     def __init__(self, root, baseset):
