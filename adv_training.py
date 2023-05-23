@@ -74,7 +74,7 @@ def adv_train(args):
     poison_method = args.poison_method
     if not os.path.exists(dir):
         os.makedirs(dir)
-    os.environ["CUDA_VISIBLE_DEVICES"] = '4'
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
     #os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
     device = torch.device("cuda" if not args.no_cuda else "cpu")
     kwargs = {'num_workers': 4, 'pin_memory': True} if not args.no_cuda else {}
