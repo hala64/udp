@@ -96,7 +96,7 @@ def evaluate(args):
         if args.dataset == 'CIFAR-10':
             total_epoch = args.epochs
             victim_schduler = MultiStepLR(optimizer=victim_optimizer, milestones=[75, 90], gamma=0.1)
-        elif args.dataset == 'CIFAR-100' or 'TinyImageNet':
+        elif args.dataset == 'CIFAR-100' or args.dataset == 'TinyImageNet':
             total_epoch = 200
             victim_schduler = MultiStepLR(optimizer=victim_optimizer, milestones=[60, 120, 160], gamma=0.1)
         for epoch in range(start_epoch, total_epoch):
