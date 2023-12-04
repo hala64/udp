@@ -7,7 +7,7 @@ full_poison = ['random-c','region4','region16','region64', 'err-min-s', 'err-min
 
 
 def generate_poison(args, poison):
-    if poison == 'random-c' or 'region4' or 'region16' or 'region64':
+    if poison == 'random-c' or poison == 'region4' or poison == 'region16' or poison == 'region64':
         poisons = classwise(args, poison)
     elif poison == 'err-min-s':
         # generated from https://github.com/HanxunH/Unlearnable-Examples
