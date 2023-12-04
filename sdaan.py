@@ -110,8 +110,8 @@ def denoise_aug(args):
 
     logger.info(s)
 
-    transform_train = transforms.Compose([transforms.ToPILImage(),
-        transforms.RandomResizedCrop(output_size, scale=(1 - 0.9 * s, 1.0)),
+    transform_train = transforms.Compose([#transforms.ToPILImage(),
+                                          transforms.RandomResizedCrop(output_size, scale=(1 - 0.9 * s, 1.0)),
                                           transforms.RandomHorizontalFlip(p=0.5),
                                           transforms.RandomApply(
                                               [transforms.ColorJitter(0.4 * s, 0.4 * s, 0.4 * s, 0.1 * s)],
