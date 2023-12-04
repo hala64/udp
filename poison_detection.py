@@ -77,7 +77,7 @@ def poisondetect(args):
     width, _, _, _ = data_utils(args)
 
     torch.manual_seed(args.seed)
-    if args.dataset == 'CIFAR-10' or 'CIFAR-100':
+    if args.dataset == 'CIFAR-10' or args.dataset == 'CIFAR-100':
         train_set, val_set = dataset.random_split(poison_data, (40000, 10000))
     elif args.dataset == 'TinyImageNet':
         train_set, val_set = dataset.random_split(poison_data, (90000, 10000))
@@ -94,7 +94,7 @@ def poisondetect(args):
 
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=batch_size, shuffle=True,**kwargs)
 
-    if args.detection_method == 'bias-0.5' or 'bias+0.5':
+    if args.detection_method == 'bias-0.5' or args.detection_method == 'bias+0.5':
         victim_model = ResNet18().to(device)
     elif args.detection_method == 'simple-linear':
         victim_model = Linear(input_dims=width*width*3).to(device)
@@ -110,11 +110,11 @@ def poisondetect(args):
     if args.dataset == 'CIFAR-10':
         total_epoch = args.epochs
         victim_schduler = MultiStepLR(optimizer=victim_optimizer, milestones=[75, 90], gamma=0.1)
-    elif args.dataset == 'CIFAR-100' or 'TinyImageNet':
+    elif args.dataset == 'CIFAR-100' or args.dataset == 'TinyImageNet':
         total_epoch = 200
         victim_schduler = MultiStepLR(optimizer=victim_optimizer, milestones=[60, 120, 160], gamma=0.1)
 
-    if args.detection_method == 'bias+0.5' or 'bias-0.5':
+    if args.detection_method == 'bias+0.5' or args.detection_method == 'bias-0.5':
         victim_lr = args.lr
 
     for epoch in range(total_epoch):
