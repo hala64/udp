@@ -68,7 +68,7 @@ def classwise(args, poison):
         end_time = time.time()
         logger.info(f'generate {poison} in {end_time-start_time} seconds')
 
-    elif poison == 'region4' or 'region16' or 'region64':
+    elif poison == 'region4' or poison == 'region16' or poison == 'region64':
         patch = ''.join(re.findall('[0-9]', poison))
         patch = int(patch)
         start_time = time.time()
