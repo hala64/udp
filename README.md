@@ -1,5 +1,7 @@
 # Detection and Defense of Unlearnable Examples (AAAI-24)
 
+This is the official repository for AAAI-24 paper "Detection and Defense of Unlearnable Examples".
+
 Install requirements
 ```shell
 pip install -r requirements.txt
