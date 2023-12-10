@@ -1,4 +1,4 @@
-# Detection and Defense of Unlearnable Examples
+# Detection and Defense of Unlearnable Examples (AAAI-24)
 
 Install requirements
 ```shell
